@@ -31,10 +31,16 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    restart: on-failure
+    restart: always
     volumes:
       - ./client:/usr/share/nginx/html
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ./backend/static:/usr/share/nginx/doc
+      - ./certbot/www:/var/www/certbot/:ro
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
 
 
