@@ -45,7 +45,3 @@ services:
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
-
-networks:
-  nginx_net:
-    name: nginx_net
