@@ -30,7 +30,6 @@ services:
     image: nginx:alpine
     ports:
       - "80:80"
-      - "444:443"
     restart: always
     volumes:
       - ./client:/usr/share/nginx/html
