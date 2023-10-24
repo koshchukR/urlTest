@@ -34,17 +34,19 @@ def detect_forms(url):
         www_authenticate = response.headers['www-authenticate']
         basic_auth_detected = www_authenticate.lower().startswith('basic')
 
-        # Determine risk score
-        if len(forms) > 0 or len(
-                inputs) > 0 or inline_form_detected or external_form_detected or basic_auth_detected:
-            return True
-        else:
-            return False
+    # Determine risk score
+    if len(forms) > 0 or len(inputs) > 0 or inline_form_detected or external_form_detected or basic_auth_detected:
+        return True
+    else:
+        return False
+
 
 
 def webform_to_transmit_data(url):
     forms_risk_score = 0
     message = ''
+
+    print(url)
 
     if detect_forms(url):
         message = "The webpage appears to have a form, some form of user input, or basic authentication."
