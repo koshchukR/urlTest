@@ -23,7 +23,7 @@ const Form = () => {
     const handleInputData = (data) => {
         setData(data)
         setError('')
-        setValue('')
+        // setValue('')
         setIsLoading(false)
     }
 
