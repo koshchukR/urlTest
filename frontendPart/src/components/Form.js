@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import css from './Form.module.css'
 import {urlService} from "../services";
@@ -9,8 +9,17 @@ const Form = () => {
     const [value, setValue] = useState(null)
     const [error, setError] = useState(null)
     const [data, setData] = useState(null)
+    const [isLogined, setIsLogined] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            setIsLogined(true)
+        }
+    }, []);
 
     const handleInputError = (value) => {
         if (value.status === 401) {
@@ -32,9 +41,17 @@ const Form = () => {
         setError('')
         setData('')
         setIsLoading(true)
-        urlService.checkUrl(url, token).then(data => handleInputData(data.data)).catch(e => {
-            handleInputError(e.response)
-        })
+
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+            urlService.checkUrl(url, token).then(data => handleInputData(data.data)).catch(e => {
+                handleInputError(e.response)
+            })
+        } else {
+            setIsLoading(false)
+            setError('Url should starts with http:// or https://')
+            setData('')
+        }
+
     }
 
     const onLoginClick = () => {
@@ -44,9 +61,10 @@ const Form = () => {
         <div className={css.formDiv}>
             <div className={css.inputButtonDiv}>
                 <input type="text" onChange={(e) => setValue(e.target.value)} value={value} placeholder={'Enter url'}/>
-                <button className={css.check} onClick={() => value ? submit(value) : handleInputError("This field can not be blank.")}>Check
+                <button className={css.check}
+                        onClick={() => value ? submit(value) : handleInputError("This field can not be blank.")}>Check
                 </button>
-                <button className={css.login} onClick={onLoginClick}>Login</button>
+                {!isLogined && <button className={css.login} onClick={onLoginClick}>Login</button>}
             </div>
             {isLoading && <span className={css.loader}></span>}
             {error && <div className={css.errorText}>{error}</div>}
